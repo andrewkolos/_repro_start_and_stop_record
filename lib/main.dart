@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -27,20 +28,7 @@ class MainApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () async {
-                  for (int i = 0; i < 10; i++) {
-                    await Future.delayed(const Duration(milliseconds: 150),
-                        () async {
-                      if (await recorder.isRecording()) {
-                        await recorder.stop();
-                      }
-                    });
-                    await recorder.start(
-                      const RecordConfig(encoder: AudioEncoder.aacLc),
-                      path: join(tempDir, _getRandomString()),
-                    );
-                  }
-                },
+                onPressed: () => _makeRecordings(),
                 child: const Text('Make 10 recordings'),
               ),
               const Text(
@@ -52,6 +40,26 @@ class MainApp extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future<void> _makeRecordings() async {
+  final Stopwatch stopwatch = Stopwatch()..start();
+  for (int i = 0; i < 10; i++) {
+    await Future.delayed(const Duration(milliseconds: 150), () async {
+      print('Checking recording status at ${stopwatch.elapsed}');
+      if (await recorder.isRecording()) {
+        print('Stopping recording $i at ${stopwatch.elapsed}');
+        await recorder.stop();
+        print('Stopped stopped recording $i at ${stopwatch.elapsed}');
+      }
+    });
+    print('Starting recording ${i + 1} at ${stopwatch.elapsed}');
+    await recorder.start(
+      const RecordConfig(encoder: AudioEncoder.aacLc),
+      path: join(tempDir, _getRandomString()),
+    );
+    print('Started recording ${i + 1} at ${stopwatch.elapsed}');
   }
 }
 
