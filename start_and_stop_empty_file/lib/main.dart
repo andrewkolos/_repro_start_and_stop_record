@@ -35,6 +35,11 @@ class MainApp extends StatelessWidget {
                 child: const Text('Make a zero-length recording'),
               ),
               ElevatedButton(
+                onPressed: () =>
+                    _makeRecording(const Duration(milliseconds: 500)),
+                child: const Text('Make a half-second-long recording'),
+              ),
+              ElevatedButton(
                 onPressed: () => _makeRecording(const Duration(seconds: 1)),
                 child: const Text('Make a second-long recording'),
               ),
