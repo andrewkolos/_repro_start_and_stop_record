@@ -36,6 +36,11 @@ class MainApp extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () =>
+                    _makeRecording(const Duration(milliseconds: 250)),
+                child: const Text('Make a quarter--second-long recording'),
+              ),
+              ElevatedButton(
+                onPressed: () =>
                     _makeRecording(const Duration(milliseconds: 500)),
                 child: const Text('Make a half-second-long recording'),
               ),
@@ -90,7 +95,7 @@ Future<void> _makeRecording(Duration duration) async {
   );
 
   print(
-    'Duration between .start() being called and .start() finishing was ${Duration(milliseconds: stopFinishedAt - startCalledAt)}',
+    'Duration between .start() being called and .start() finishing was ${Duration(milliseconds: startFinishedAt - startCalledAt)}',
   );
   print(
     'Duration between .start() finishing and .stop() being called was ${Duration(milliseconds: stopCalledAt - startFinishedAt)}',
@@ -98,6 +103,10 @@ Future<void> _makeRecording(Duration duration) async {
 
   print(
     'Duration between .start() finishing and .stop() finishing was ${Duration(milliseconds: stopFinishedAt - startFinishedAt)}',
+  );
+
+  print(
+    'Duration between .start() being called and .stop() finishing was ${Duration(milliseconds: stopFinishedAt - startCalledAt)}',
   );
 
   if (await _isFfprobeAvailable()) {
@@ -114,7 +123,7 @@ Future<void> _makeRecording(Duration duration) async {
     ];
     final ffprobeOutput = await Process.run('ffprobe', args);
 
-    print(args.join(' '));
+    print('Running ffprobe: ffprobe ${args.join(' ')}');
     if (ffprobeOutput.exitCode == 0) {
       print('Audio file produced has a length of ${ffprobeOutput.stdout}');
     } else {
